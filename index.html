@@ -15,23 +15,23 @@
 	/*noinspection CssUnusedSymbol*/
 	.link {
 		stroke: #eee;
-		stroke-opacity: 0.25;
+		stroke-opacity: 0.1;
 		stroke-width: 1px;
 	}
 
 </style>
 <body>
-<script src="js/d3.v3.min.js"></script>
+<script src="js/d3.v3.js"></script>
 <script>
 
-	var width = 960,
-			height = 500;
+	var width = 1900,
+			height = 950;
 
 	var color = d3.scale.category20();
 
 	var force = d3.layout.force()
-			.charge(-120)
-			.linkDistance(30)
+			.charge(-500)
+			.linkDistance(200)
 			.size([width, height]);
 
 	var svg = d3.select("body").append("svg")
@@ -54,7 +54,7 @@
 				.data(graph.nodes)
 				.enter().append("circle")
 				.attr("class", "node")
-				.attr("r", 5)
+				.attr("r", 10)
 				.style("fill", function(d) { return color(d.group); })
 				.call(force.drag);
 
