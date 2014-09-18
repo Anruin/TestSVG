@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="application/javascript" src="//narleyn.ru/common/git/angular.js/build/angular.js"></script>
+	<script type="application/javascript" src="js/jquery-2.1.1.js"></script>
+	<style>
+		.card {
+			width: 200px;
+			height: 200px;
+			margin: 20px;
+			position: relative;
+			-webkit-perspective: 500px;
+			-moz-perspective: 500px;
+			perspective: 500px;
+		}
+		.card .front {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 900;
+			width: inherit;
+			height: inherit;
+			border: 1px solid #eee;
+			background: #777777;
+			text-align: center;
+			box-shadow: 0 0 5px 0 rgba(0,0,0,0.5);
+			-webkit-transform: rotateX(0deg) rotateY(0deg);
+			-moz-transform: rotateX(0deg) rotateY(0deg);
+			transform: rotateX(0deg) rotateY(0deg);
+			-webkit-transform-style: preserve-3d;
+			-moz-transform-style: preserve-3d;
+			transform-style: preserve-3d;
+			-webkit-backface-visibility: hidden;
+			-moz-backface-visibility: hidden;
+			backface-visibility: hidden;
+			-webkit-transition: all 0.5s ease-in-out;
+			transition: all 0.5s ease-in-out;
+		}
+		.card .back {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 800;
+			width: inherit;
+			height: inherit;
+			border: 1px solid #eee;
+			background: #555555;
+			text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+			-webkit-transform: rotateY(-179deg);
+			-moz-transform: rotateY(-179deg);
+			transform: rotateY(-179deg);
+			-webkit-transform-style: preserve-3d;
+			-moz-transform-style: preserve-3d;
+			transform-style: preserve-3d;
+			-webkit-backface-visibility: hidden;
+			-moz-backface-visibility: hidden;
+			backface-visibility: hidden;
+			-webkit-transition: all 0.5s ease-in-out;
+			transition: all 0.5s ease-in-out;
+		}
+		.card.flip .front {
+			z-index: 900;
+			border-color: #aaaaaa;
+			background: #333333;
+			-webkit-transform: rotateY(180deg);
+			-moz-transform: rotateY(180deg);
+			transform: rotateY(180deg);
+		}
+		.card.flip .back {
+			 z-index: 1000;
+			 background: #777777;
+			 -webkit-transform: rotateX(0deg) rotateY(0deg);
+			 -moz-transform: rotateX(0deg) rotateY(0 deg);
+			 transform: rotateX(0deg) rotateY(0deg);
+		 }
+	</style>
+</head>
+<body ng-app="CardsGame">
+	<h1>Turning cards</h1>
+	<div class="board" ng-controller="CardsController as cardsController">
+		<div class="card" ng-repeat="card in cardsController.cards" onclick="cardClick(this)" ng-click="cardsController.clickCard($index)" ng-if="!card.hidden">
+			<div class="front">
+				<h1>Closed</h1>
+			</div>
+			<div class="back">
+				<h1>{{card.type}}</h1>
+			</div>
+		</div>
+	</div>
+	<script>
+		function cardClick(card) {
+			$(card).toggleClass('flip');
+		}
+
+		$('.card').click(function(e) {
+			$(e.target).toggleClass('flip');
+		});
+	</script>
+	<script type="application/javascript" id="angular-module">
+		window.CardsGame = angular.module('CardsGame', []);
+	</script>
+	<script type="application/javascript" id="angular-cards-controller">
+		window.CardsGame.controller('CardsController', ['$scope', function($scope) {
+			this.cards = [
+				{ type: 0, closed: true, hidden: false }, { type: 0, closed: true, hidden: false }, { type: 1, closed: true, hidden: false }, { type: 1, closed: true, hidden: false },
+				{ type: 2, closed: true, hidden: false }, { type: 2, closed: true, hidden: false }, { type: 3, closed: true, hidden: false }, { type: 3, closed: true, hidden: false },
+				{ type: 4, closed: true, hidden: false }, { type: 4, closed: true, hidden: false }, { type: 5, closed: true, hidden: false }, { type: 5, closed: true, hidden: false }
+			];
+			this.selectedCard = null;
+			this.clickCard = function(index) {
+				var clickedCard = this.cards[index];
+				if (clickedCard.hidden === false) {
+					clickedCard.closed = !clickedCard.closed;
+					if (this.selectedCard) {
+						if (clickedCard != this.selectedCard && clickedCard.type === this.selectedCard.type) {
+							this.selectedCard.hidden = clickedCard.hidden = true;
+						}
+					}
+				}
+				this.selectedCard = clickedCard;
+			};
+		}]);
+	</script>
+</body>
+</html>
