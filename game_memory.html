@@ -7,6 +7,11 @@
 	<script type="application/javascript" src="//narleyn.ru/common/git/angular.js/build/angular.js"></script>
 	<script type="application/javascript" src="js/jquery-2.1.1.js"></script>
 	<style>
+		.board {
+			width: 960px;
+			height: 960px;
+			background: #222222;
+		}
 		.card {
 			float: left;
 			text-align: center;
@@ -111,7 +116,8 @@
 			this.cards = [
 				{ type: 0, closed: true, hidden: false }, { type: 1, closed: true, hidden: false }, { type: 2, closed: true, hidden: false }, { type: 3, closed: true, hidden: false },
 				{ type: 4, closed: true, hidden: false }, { type: 0, closed: true, hidden: false }, { type: 1, closed: true, hidden: false }, { type: 2, closed: true, hidden: false },
-				{ type: 3, closed: true, hidden: false }, { type: 4, closed: true, hidden: false }, { type: 1, closed: true, hidden: false }, { type: 1, closed: true, hidden: false }
+				{ type: 3, closed: true, hidden: false }, { type: 4, closed: true, hidden: false }, { type: 1, closed: true, hidden: false }, { type: 1, closed: true, hidden: false },
+				{ type: 2, closed: true, hidden: false }, { type: 0, closed: true, hidden: false }, { type: 2, closed: true, hidden: false }, { type: 0, closed: true, hidden: false }
 			];
 			this.selectedCard = null;
 			this.clickCard = function(index) {
