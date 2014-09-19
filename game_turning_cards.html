@@ -2,12 +2,14 @@
 <html>
 <head lang="en">
 	<meta charset="UTF-8">
-	<title></title>
+	<title>Memory game</title>
 	<link rel="stylesheet" href="css/style.css">
 	<script type="application/javascript" src="//narleyn.ru/common/git/angular.js/build/angular.js"></script>
 	<script type="application/javascript" src="js/jquery-2.1.1.js"></script>
 	<style>
 		.card {
+			float: left;
+			text-align: center;
 			width: 200px;
 			height: 200px;
 			margin: 20px;
@@ -15,7 +17,9 @@
 			-webkit-perspective: 500px;
 			-moz-perspective: 500px;
 			perspective: 500px;
-		}
+			transition: opacity 0.5s ease-in-out;
+			transition-delay: 0.5s;
+		}  
 		.card .front {
 			position: absolute;
 			top: 0;
@@ -25,7 +29,6 @@
 			height: inherit;
 			border: 1px solid #eee;
 			background: #777777;
-			text-align: center;
 			box-shadow: 0 0 5px 0 rgba(0,0,0,0.5);
 			-webkit-transform: rotateX(0deg) rotateY(0deg);
 			-moz-transform: rotateX(0deg) rotateY(0deg);
@@ -76,28 +79,29 @@
 			 -moz-transform: rotateX(0deg) rotateY(0 deg);
 			 transform: rotateX(0deg) rotateY(0deg);
 		 }
+		.card.hidden {
+			opacity: 0;
+		}
 	</style>
 </head>
 <body ng-app="CardsGame">
-	<h1>Turning cards</h1>
+	<h1>Memory game</h1>
 	<div class="board" ng-controller="CardsController as cardsController">
-		<div class="card" ng-repeat="card in cardsController.cards" onclick="cardClick(this)" ng-click="cardsController.clickCard($index)" ng-if="!card.hidden">
+		<div class="card" ng-repeat="card in cardsController.cards" onclick="cardClick(this)" ng-click="cardsController.clickCard($index)" ng-class="{'hidden': card.hidden}">
 			<div class="front">
-				<h1>Closed</h1>
+				<img src="img/card_bg.png">
 			</div>
 			<div class="back">
-				<h1>{{card.type}}</h1>
+				<img ng-src="img/cards/{{card.type}}.jpg">
 			</div>
 		</div>
 	</div>
 	<script>
 		function cardClick(card) {
-			$(card).toggleClass('flip');
+			if (!$(card).hasClass('hidden')) {
+				$(card).toggleClass('flip');
+			}
 		}
-
-		$('.card').click(function(e) {
-			$(e.target).toggleClass('flip');
-		});
 	</script>
 	<script type="application/javascript" id="angular-module">
 		window.CardsGame = angular.module('CardsGame', []);
@@ -105,9 +109,9 @@
 	<script type="application/javascript" id="angular-cards-controller">
 		window.CardsGame.controller('CardsController', ['$scope', function($scope) {
 			this.cards = [
-				{ type: 0, closed: true, hidden: false }, { type: 0, closed: true, hidden: false }, { type: 1, closed: true, hidden: false }, { type: 1, closed: true, hidden: false },
-				{ type: 2, closed: true, hidden: false }, { type: 2, closed: true, hidden: false }, { type: 3, closed: true, hidden: false }, { type: 3, closed: true, hidden: false },
-				{ type: 4, closed: true, hidden: false }, { type: 4, closed: true, hidden: false }, { type: 5, closed: true, hidden: false }, { type: 5, closed: true, hidden: false }
+				{ type: 0, closed: true, hidden: false }, { type: 1, closed: true, hidden: false }, { type: 2, closed: true, hidden: false }, { type: 3, closed: true, hidden: false },
+				{ type: 4, closed: true, hidden: false }, { type: 0, closed: true, hidden: false }, { type: 1, closed: true, hidden: false }, { type: 2, closed: true, hidden: false },
+				{ type: 3, closed: true, hidden: false }, { type: 4, closed: true, hidden: false }, { type: 1, closed: true, hidden: false }, { type: 1, closed: true, hidden: false }
 			];
 			this.selectedCard = null;
 			this.clickCard = function(index) {
@@ -115,12 +119,17 @@
 				if (clickedCard.hidden === false) {
 					clickedCard.closed = !clickedCard.closed;
 					if (this.selectedCard) {
-						if (clickedCard != this.selectedCard && clickedCard.type === this.selectedCard.type) {
+						if (clickedCard != this.selectedCard && !clickedCard.closed && !this.selectedCard.closed && clickedCard.type === this.selectedCard.type) {
 							this.selectedCard.hidden = clickedCard.hidden = true;
+							this.selectedCard = null;
+						} else {
+							// this.selectedCard.closed = clickedCard.closed = true;
 						}
 					}
 				}
-				this.selectedCard = clickedCard;
+				if (!clickedCard.hidden) {
+					this.selectedCard = clickedCard;
+				}
 			};
 		}]);
 	</script>
